@@ -1,32 +1,40 @@
 {
-  description = "A Haskell API for OpenAI";
+  description = "Haskell API for OpenAI";
 
   nixConfig.bash-prompt = "[nix:openai-haskell]$ ";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    haskell-nix.url = "github:input-output-hk/haskell.nix";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs = { self, nixpkgs, flake-utils, haskell-nix }:
+    flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
-
-        # Import the Haskell environment from nixpkgs
-        haskellEnv = pkgs.haskellPackages.developPackage {
-          root = ./.;
-          name = "openai-api";
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ haskell-nix.overlay ];
         };
-      in
-      {
+
+        haskellEnv = pkgs.haskell.packages.ghc8107;
+
+        openai-api = haskellEnv.callCabal2nix "openai-api" ./. { };
+
+      in {
+        packages = {
+          openai-api = openai-api;
+        };
+
+        defaultPackage = self.packages.${system}.openai-api;
+
         devShell = haskellEnv.shellFor {
-          # Add any additional packages you need for development here
-          buildInputs = with pkgs; [
-            cabal-install
-            ghc
-            git
-          ];
+          packages = p: [ openai-api ];
+          buildInputs = with pkgs; [ cabal-install ];
+        };
+
+        checks = {
+          openai-api = openai-api;
         };
       }
     );
