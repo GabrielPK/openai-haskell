@@ -2,7 +2,7 @@
 package = openai-haskell
 
 # target ?= $(package):lib:test-dev
-target ?= $(package):lib
+target ?= $(package):openai-haskell
 
 ifdef warn
 GHC_OPTIONS ?=
@@ -47,4 +47,4 @@ clean: check-in-nix-shell
 	cabal clean
 
 ghcid: check-in-nix-shell
-	ghcid --command "cabal repl $(target) $(GHCID_OPTIONS)"
+	ghcid --command 'cabal repl $(target) $(GHCID_OPTIONS)'

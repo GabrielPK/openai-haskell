@@ -30,7 +30,7 @@
         
         devShell = haskellEnv.shellFor {
           packages = p: [ openai-api ];
-          buildInputs = with pkgs; [ cabal-install haskellEnv.dotenv ];
+          buildInputs = with pkgs; [ cabal-install haskellPackages.ghcid];
         };
 
         checks = {
