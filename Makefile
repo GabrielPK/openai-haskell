@@ -46,5 +46,8 @@ build: check-in-nix-shell
 clean: check-in-nix-shell
 	cabal clean
 
+ghci: check-in-nix-shell
+	cabal repl $(target) $(GHCI_FLAGS)
+
 ghcid: check-in-nix-shell
 	ghcid --command 'cabal repl $(target) $(GHCID_OPTIONS)'
