@@ -4,7 +4,7 @@
 module OpenAI.Types where
 
 import Control.Exception (Exception)
-import Data.Aeson (FromJSON)
+import Data.Aeson (ToJSON, FromJSON)
 import Data.Text
 import Data.Typeable (Typeable)
 import GHC.Generics (Generic)
@@ -24,6 +24,7 @@ data Model = Model
 
 -- | GET /api/v1/models request
 data GetModelsRequest = GetModelsRequest
+    deriving (Show, Generic, ToJSON)
 
 -- | GET /api/v1/models response
 data GetModelsResponse = GetModelsResponse

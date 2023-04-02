@@ -40,7 +40,7 @@ class OpenAIEndpoint req where
 
     reqApiKey :: req -> IO Text
     reqApiKey _ = do 
-        -- loadFile
+        loadFile defaultConfig
         maybeApiKey <- lookupEnv "OPENAI_API_KEY"
         case maybeApiKey of 
             Nothing -> error "OPENAI_API_KEY environment variable not found"
