@@ -1,0 +1,18 @@
+:set -isrc
+:set +m
+
+:set -XDeriveGeneric
+:set -XDeriveLift
+:set -XFlexibleContexts
+:set -XFlexibleInstances
+:set -XGADTs
+:set -XGeneralizedNewtypeDeriving
+:set -XMultiParamTypeClasses
+-- :set -XNoImplicitPrelude
+:set -XOverloadedStrings
+:set -XRecordWildCards
+:set -XStandaloneDeriving
+:set -XTypeFamilies
+:set -XViewPatterns
+:set -XDeriveAnyClass
+:set -XAllowAmbiguousTypes

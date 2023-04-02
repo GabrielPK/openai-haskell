@@ -20,9 +20,7 @@ data Model = Model
     ,  owned_by :: Text
     ,  permission :: [Text]
     }
-    deriving (Show, Generic)
-
-instance FromJSON Model
+    deriving (Show, Generic, FromJSON)
 
 -- | GET /api/v1/models request
 data GetModelsRequest = GetModelsRequest
@@ -31,10 +29,9 @@ data GetModelsRequest = GetModelsRequest
 data GetModelsResponse = GetModelsResponse
   { models :: [Model]
   } 
-  deriving (Show, Generic)
+  deriving (Show, Generic, FromJSON)
 
-instance FromJSON GetModelsResponse
-
+-- | Exception for invalid JSON
 data InvalidJsonException = InvalidJsonException String
     deriving (Show, Typeable)
 instance Exception InvalidJsonException

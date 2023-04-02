@@ -18,7 +18,7 @@ WHITE  := $(shell tput -Txterm setaf 7)
 BOLD   := $(shell tput -Txterm bold)
 RESET  := $(shell tput -Txterm sgr0)
 
-GHCI_FLAGS=--repl-options="-j -fwrite-interface -fno-defer-diagnostics -ignore-dot-ghci"
+GHCI_FLAGS=--repl-options="-j -fwrite-interface -fno-defer-diagnostics -ignore-dot-ghci -ghci-script .ghci"
 
 GHCID_OPTIONS = $(GHCI_FLAGS) --repl-options="-fno-break-on-exception -fno-break-on-error -v1 -ferror-spans"
 
