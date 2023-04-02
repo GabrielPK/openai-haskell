@@ -1,5 +1,6 @@
 module OpenAI.Api where
 
+import Prelude hiding (concat)
 import Control.Exception (throwIO)
 import Data.Aeson (ToJSON, FromJSON, encode, eitherDecode)
 import Data.Text
@@ -46,8 +47,8 @@ class OpenAIEndpoint req where
             Nothing -> error "OPENAI_API_KEY environment variable not found"
             Just apiKey -> pure $ pack apiKey
 
-instance OpenAIEndpoint GetModelsRequest where 
-    type OpenAIResponse GetModelsRequest = GetModelsResponse
+instance OpenAIEndpoint GetOpenAIModelsRequest where 
+    type OpenAIResponse GetOpenAIModelsRequest = GetOpenAIModelsResponse
 
     httpMethod _ = GET
     url _ = "/models"
@@ -64,7 +65,7 @@ makeOpenAIRequest ::
 makeOpenAIRequest req = do
     manager <- newManager tlsManagerSettings
     apiKey <- reqApiKey req
-    let reqUrl = unpack $ (reqDomain req) <> url req
+    let reqUrl = unpack $ concat ["https://", reqDomain req, url req]
     initReq <- parseRequest reqUrl
 
     let httpReq = initReq

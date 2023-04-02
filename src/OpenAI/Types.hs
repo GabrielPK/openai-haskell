@@ -3,8 +3,9 @@
 -- | Types for https://platform.openai.com/docs/api-reference
 module OpenAI.Types where
 
+import Prelude
 import Control.Exception (Exception)
-import Data.Aeson (ToJSON, FromJSON)
+import Data.Aeson (ToJSON, FromJSON, withObject, (.:), parseJSON)
 import Data.Text
 import Data.Typeable (Typeable)
 import GHC.Generics (Generic)
@@ -14,25 +15,41 @@ import GHC.Generics (Generic)
     -- deriving newtype (Eq, FromJSON, ToJSON, Ord, Read, Show, ToHttpApiData, FromHttpApiData)
 
 -- | Model response for GET /api/v1/models
-data Model = Model
-    {  id :: Text
-    ,  object :: Text
-    ,  owned_by :: Text
-    ,  permission :: [Text]
+data OpenAIModel = OpenAIModel
+    {  openAIModelId :: Text
+    ,  openAIModelObject :: Text
+    ,  openAIModelOwnedBy :: Text
+    -- ,  openAIModelPermission :: [Text]
     }
-    deriving (Show, Generic, FromJSON)
+    deriving (Show, Generic)
+
+instance FromJSON OpenAIModel where
+  parseJSON = withObject "OpenAIModel" $ \v ->
+    OpenAIModel
+      <$> v .: "id"
+      <*> v .: "object"
+      <*> v .: "owned_by"
+    --   <*> v .: "permission"
 
 -- | GET /api/v1/models request
-data GetModelsRequest = GetModelsRequest
+data GetOpenAIModelsRequest = GetOpenAIModelsRequest
     deriving (Show, Generic, ToJSON)
 
 -- | GET /api/v1/models response
-data GetModelsResponse = GetModelsResponse
-  { models :: [Model]
-  } 
-  deriving (Show, Generic, FromJSON)
+data GetOpenAIModelsResponse = GetOpenAIModelsResponse
+    { getOpenAIModelsResponseData :: [OpenAIModel]
+    , getOpenAIModelsResponseObject :: Text    
+    } 
+    deriving (Show, Generic)
+
+instance FromJSON GetOpenAIModelsResponse where
+  parseJSON = withObject "GetModelsResponse" $ \v ->
+    GetOpenAIModelsResponse
+      <$> v .: "data"
+      <*> v .: "object"
 
 -- | Exception for invalid JSON
 data InvalidJsonException = InvalidJsonException String
     deriving (Show, Typeable)
 instance Exception InvalidJsonException
+

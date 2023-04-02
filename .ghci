@@ -8,7 +8,7 @@
 :set -XGADTs
 :set -XGeneralizedNewtypeDeriving
 :set -XMultiParamTypeClasses
--- :set -XNoImplicitPrelude
+:set -XNoImplicitPrelude
 :set -XOverloadedStrings
 :set -XRecordWildCards
 :set -XStandaloneDeriving
