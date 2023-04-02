@@ -3,9 +3,10 @@
 -- | Types for https://platform.openai.com/docs/api-reference
 module OpenAI.Types where
 
-import Data.Text
+import Control.Exception (Exception)
 import Data.Aeson (FromJSON)
 import Data.Text
+import Data.Typeable (Typeable)
 import GHC.Generics (Generic)
 
 -- newtype OpenAIObject = OpenAIObject Text
@@ -33,3 +34,7 @@ data GetModelsResponse = GetModelsResponse
   deriving (Show, Generic)
 
 instance FromJSON GetModelsResponse
+
+data InvalidJsonException = InvalidJsonException String
+    deriving (Show, Typeable)
+instance Exception InvalidJsonException

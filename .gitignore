@@ -1,2 +1,5 @@
 dist-newstyle
 .env
+.vscode
+scripts
+nix

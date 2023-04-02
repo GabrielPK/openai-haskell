@@ -17,7 +17,7 @@
           overlays = [ haskell-nix.overlay ];
         };
 
-        haskellEnv = pkgs.haskell.packages.ghc8107;
+        haskellEnv = pkgs.haskell.packages.ghc943;
 
         openai-api = haskellEnv.callCabal2nix "openai-api" ./. { };
 
@@ -27,10 +27,10 @@
         };
 
         defaultPackage = self.packages.${system}.openai-api;
-
+        
         devShell = haskellEnv.shellFor {
           packages = p: [ openai-api ];
-          buildInputs = with pkgs; [ cabal-install ];
+          buildInputs = with pkgs; [ cabal-install haskellEnv.dotenv ];
         };
 
         checks = {
