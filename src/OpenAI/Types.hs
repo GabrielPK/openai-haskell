@@ -19,7 +19,6 @@ data OpenAIModel = OpenAIModel
     {  openAIModelId :: Text
     ,  openAIModelObject :: Text
     ,  openAIModelOwnedBy :: Text
-    -- ,  openAIModelPermission :: [Text]
     }
     deriving (Show, Generic)
 
@@ -29,7 +28,6 @@ instance FromJSON OpenAIModel where
       <$> v .: "id"
       <*> v .: "object"
       <*> v .: "owned_by"
-    --   <*> v .: "permission"
 
 -- | GET /api/v1/models request
 data GetOpenAIModelsRequest = GetOpenAIModelsRequest
