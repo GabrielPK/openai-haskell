@@ -54,6 +54,13 @@ instance OpenAIEndpoint GetOpenAIModelsRequest where
     url _ = "/models"
     reqBody _ = Nothing
 
+instance OpenAIEndpoint GetOpenAIModelRequest where 
+    type OpenAIResponse GetOpenAIModelRequest = GetOpenAIModelResponse
+
+    httpMethod _ = GET
+    url (GetOpenAIModelRequest (OpenAIExogenousId modelId)) = "/models/" <> modelId
+    reqBody _ = Nothing
+
 -- | Call the OpenAI API with the given request.
 makeOpenAIRequest :: 
     ( OpenAIEndpoint req 
@@ -80,6 +87,7 @@ makeOpenAIRequest req = do
             }
 
     response <- httpLbs httpReq manager
+    -- putStrLn $ "Raw JSON Response: " ++ show (responseBody response) -- Add this line to print the raw response
     let decoded = eitherDecode $ responseBody response
     case decoded of
         Left err -> throwIO $ InvalidJsonException err
