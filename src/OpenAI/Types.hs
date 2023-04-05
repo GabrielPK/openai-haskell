@@ -1,16 +1,13 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
 
--- | Types for https://platform.openai.com/docs/api-reference
 module OpenAI.Types where
 
-import Prelude
-import Control.Exception (Exception)
-import Data.Aeson (ToJSON, toJSON, Value(String), withObject, (.:), parseJSON)
-import Data.Aeson.Types (FromJSON, parseJSON, withText)
+import Data.Aeson
 import Data.Text
-import Data.Typeable (Typeable)
 import GHC.Generics (Generic)
+import Servant.API
+import Prelude
 
 newtype OpenAIExogenousId = OpenAIExogenousId Text
     deriving newtype (Eq, Ord, Read, Show, ToJSON, FromJSON)
@@ -32,7 +29,6 @@ instance FromJSON OpenAIObject where
     other -> OpenAIObjectUnknown <$> parseJSON (String other)
   parseJSON _ = fail "Expected a JSON string"
 
--- | Model response OpenAI models
 data OpenAIModel = OpenAIModel
     {  openAIModelId :: OpenAIExogenousId
     ,  openAIModelObject :: OpenAIObject
@@ -47,33 +43,5 @@ instance FromJSON OpenAIModel where
       <*> v .: "object"
       <*> v .: "owned_by"
 
--- | GET /api/v1/models request
-data GetOpenAIModelsRequest = GetOpenAIModelsRequest
-    deriving (Show, Generic, ToJSON)
-
--- | GET /api/v1/models response
-data GetOpenAIModelsResponse = GetOpenAIModelsResponse
-    { getOpenAIModelsResponseData :: [OpenAIModel]
-    , getOpenAIModelsResponseObject :: Text    
-    } 
-    deriving (Show, Generic)
-
-instance FromJSON GetOpenAIModelsResponse where
-  parseJSON = withObject "GetModelsResponse" $ \v ->
-    GetOpenAIModelsResponse
-      <$> v .: "data"
-      <*> v .: "object"
-
--- | GET /api/v1/models{model} request
-data GetOpenAIModelRequest = GetOpenAIModelRequest OpenAIExogenousId
-    deriving (Show, Generic, ToJSON)
-
--- | GET /api/v1/models{model} response
-data GetOpenAIModelResponse = GetOpenAIModelResponse OpenAIModel
-    deriving (Show, Generic, FromJSON)
-
--- | Exception for invalid JSON
-data InvalidJsonException = InvalidJsonException String
-    deriving (Show, Typeable)
-instance Exception InvalidJsonException
+type OpenAIAPI = Header "Authorization" Text :> "v1" :> "models" :> Get '[JSON] [OpenAIModel]
 

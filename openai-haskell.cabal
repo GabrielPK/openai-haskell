@@ -29,6 +29,8 @@ library
                      , dotenv >= 0.8 && <0.9
                      , http-types
                      , servant
+                     , servant-client
+                    --  , servant-client-streaming
   hs-source-dirs:      src
   default-language:    Haskell2010
 

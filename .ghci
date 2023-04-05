@@ -16,3 +16,5 @@
 :set -XViewPatterns
 :set -XDeriveAnyClass
 :set -XAllowAmbiguousTypes
+:set -XDataKinds
+:set -XTypeOperators
