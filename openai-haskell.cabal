@@ -18,7 +18,7 @@ cabal-version:       >=1.10
 library
   -- other-modules:
   -- other-extensions:
-  exposed-modules:     OpenAI.Api
+  exposed-modules:     OpenAI.Client
                      , OpenAI.Types
   build-depends:       base >=4.12 && <4.18
                      , http-client
@@ -30,7 +30,6 @@ library
                      , http-types
                      , servant
                      , servant-client
-                    --  , servant-client-streaming
   hs-source-dirs:      src
   default-language:    Haskell2010
 

@@ -1,4 +1,4 @@
-module OpenAI.Api where
+module OpenAI.Client where
 
 import Prelude
 import Configuration.Dotenv (loadFile, defaultConfig)
@@ -17,7 +17,7 @@ import qualified Servant.Client.Streaming as S
 import System.Environment (lookupEnv)
 import Data.Text
 
-openAIDomain :: Text
+openAIDomain :: String
 openAIDomain = "api.openai.com"
 
 getOpenAIApiKey :: IO Text 
@@ -31,22 +31,23 @@ getOpenAIApiKey = do
 api :: Proxy OpenAIAPI
 api = Proxy
 
-getModels = client api
+getModels :<|> getModelById = client api
 
-queries :: Text -> ClientM ([OpenAIModel])
+queries :: Text -> ClientM ([OpenAIModel] , OpenAIModel)
 queries apiKey = do
     models <- getModels (Just apiKey)
-    pure models
+    model <- getModelById (Just apiKey) (OpenAIExogenousId "text-davinci-003")
+    pure (models, model)
 
 run :: IO ()
 run = do
     manager' <- newTlsManager
     apiKey <- getOpenAIApiKey
-    let baseUrl = BaseUrl Https "api.openai.com" 443 ""
+    let baseUrl = BaseUrl Https openAIDomain 443 ""
         bearerKey = "Bearer " <> apiKey
     res <- runClientM (queries bearerKey) (mkClientEnv manager' baseUrl)
     case res of 
         Left err -> putStrLn $ "Error: " ++ show err
-        Right models -> do
+        Right (models, model) -> do
             putStrLn "Models:"
             forM_ models print
